@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silly Seal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <audio id="backgroundMusic" loop muted></audio>
+    <!-- Removed 'loop' attribute here to allow JavaScript to control playlist looping. -->
+    <audio id="backgroundMusic" autoplay muted></audio>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -135,7 +137,6 @@
             audio.src = playlist[index];
             audio.play().catch(error => {
                 console.error("Autoplay failed:", error);
-                // Handle autoplay restrictions (e.g., show a play button)
             });
         }
 
@@ -147,7 +148,7 @@
             if (currentSongIndex < playlist.length) {
                 playSong(currentSongIndex);
             } else {
-                currentSongIndex = 0; // Loop back to the beginning
+                currentSongIndex = 0; // Loop back to the beginning of the playlist
                 playSong(currentSongIndex);
             }
         });
