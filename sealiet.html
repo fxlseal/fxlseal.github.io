@@ -125,10 +125,31 @@
 
     <script>
         const audio = document.getElementById('backgroundMusic');
-        audio.src = "https://files.catbox.moe/9j39ur.mp3";
-        audio.play().catch(error => {
-            console.error("Autoplay failed:", error);
-            // Handle autoplay restrictions (e.g., show a play button)
+        const playlist = [
+            "https://files.catbox.moe/9j39ur.mp3",
+            "https://files.catbox.moe/50ek1m.mp3"
+        ];
+        let currentSongIndex = 0;
+
+        function playSong(index) {
+            audio.src = playlist[index];
+            audio.play().catch(error => {
+                console.error("Autoplay failed:", error);
+                // Handle autoplay restrictions (e.g., show a play button)
+            });
+        }
+
+        // Play the first song initially
+        playSong(currentSongIndex);
+
+        audio.addEventListener('ended', () => {
+            currentSongIndex++;
+            if (currentSongIndex < playlist.length) {
+                playSong(currentSongIndex);
+            } else {
+                currentSongIndex = 0; // Loop back to the beginning
+                playSong(currentSongIndex);
+            }
         });
 
         document.addEventListener('click', () => {
