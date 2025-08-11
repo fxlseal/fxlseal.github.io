@@ -5,43 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silly Seal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <audio id="bgMusic" loop>
-        <source src="https://files.catbox.moe/9j39ur.mp3" type="audio/mpeg">
-    </audio>
-    <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const audio = document.getElementById("bgMusic");
-        const resumeBtn = document.getElementById("resumeAudioBtn");
-
-        function hideButton() {
-            resumeBtn.style.display = "none";
-        }
-
-        function showButton() {
-            resumeBtn.style.display = "inline-block";
-        }
-
-        // Try normal playback first
-        audio.play().then(hideButton).catch(() => {
-            // If blocked, try muted autoplay, then unmute shortly after
-            audio.muted = true;
-            audio.play().then(() => {
-                setTimeout(() => {
-                    audio.muted = false;
-                    hideButton();
-                }, 500);
-            }).catch(() => {
-                // Still blocked — show the resume button
-                showButton();
-            });
-        });
-
-        // Button click resumes playback
-        resumeBtn.addEventListener("click", () => {
-            audio.play().then(hideButton);
-        });
-    });
-    </script>
+    <audio id="backgroundMusic" loop muted></audio>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -51,8 +15,8 @@
         .animation-container {
             position: relative;
             width: 200px;
-            height: 250px; 
-            margin-top: 50px; 
+            height: 250px;
+            margin-top: 50px;
         }
 
         .circular-image {
@@ -139,49 +103,40 @@
                 opacity: 1;
             }
         }
-
-        /* Resume Audio Button */
-        #resumeAudioBtn {
-            display: none;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #4ade80; /* green */
-            color: black;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
-
-        #resumeAudioBtn:hover {
-            background-color: #22c55e;
-        }
     </style>
 </head>
 <body class="bg-black flex flex-col items-center justify-center min-h-screen">
     <div class="animation-container">
-        <img src="https://files.catbox.moe/nq5nb1.png" 
-             alt="pfp" 
+        <img src="https://files.catbox.moe/nq5nb1.png"
+             alt="pfp"
              class="circular-image bg-gray-700"
              onerror="this.style.backgroundColor='#4a5568';">
         <div class="rectangular-gif-wrapper">
-            <img src="https://files.catbox.moe/fgh7x0.gif" 
-                 alt="gif" 
+            <img src="https://files.catbox.moe/fgh7x0.gif"
+                 alt="gif"
                  class="rectangular-gif bg-gray-600"
                  onerror="this.style.backgroundColor='#718096';">
         </div>
     </div>
-
     <div class="button-container">
-        <a href="https://www.roblox.com/users/58271941">
-            <img src="https://files.catbox.moe/muhqbs.jpg?text=Roblox" alt="roblox" class="square-image-button">
-        </a>
-        <a href="https://discord.gg/SBwgMWXATW">
-            <img src="https://files.catbox.moe/39er5q.jpg?text=Discord" alt="discord" class="square-image-button">
-        </a>
+        <a href="https://www.roblox.com/users/58271941"><img src="https://files.catbox.moe/muhqbs.jpg?text=Roblox" alt="roblox" class="square-image-button"></a>
+        <a href="https://discord.gg/SBwgMWXATW"><img src="https://files.catbox.moe/39er5q.jpg?text=Discord" alt="discord" class="square-image-button"></a>
     </div>
 
-    <!-- Resume Audio Button -->
-    <button id="resumeAudioBtn">🔊 Resume Audio</button>
+    <script>
+        const audio = document.getElementById('backgroundMusic');
+        audio.src = "https://files.catbox.moe/9j39ur.mp3";
+        audio.play().catch(error => {
+            console.error("Autoplay failed:", error);
+            // Handle autoplay restrictions (e.g., show a play button)
+        });
+
+        document.addEventListener('click', () => {
+            if (audio.muted) {
+                audio.muted = false;
+                audio.play();
+            }
+        });
+    </script>
 </body>
 </html>
