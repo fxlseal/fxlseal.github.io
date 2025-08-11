@@ -5,51 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Silly Seal</title>
     <script src="https://cdn.tailwindcss.com"></script>
-	<audio autoplay loop>
- 	   <source src="https://files.catbox.moe/9j39ur.mp3" type="audio/mpeg">
-	</audio>
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/9j39ur.mp3" type="audio/mpeg">
+    </audio>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const audio = document.getElementById("bgMusic");
+        const resumeBtn = document.getElementById("resumeAudioBtn");
+
+        function hideButton() {
+            resumeBtn.style.display = "none";
+        }
+
+        function showButton() {
+            resumeBtn.style.display = "inline-block";
+        }
+
+        // Try normal playback first
+        audio.play().then(hideButton).catch(() => {
+            // If blocked, try muted autoplay, then unmute shortly after
+            audio.muted = true;
+            audio.play().then(() => {
+                setTimeout(() => {
+                    audio.muted = false;
+                    hideButton();
+                }, 500);
+            }).catch(() => {
+                // Still blocked — show the resume button
+                showButton();
+            });
+        });
+
+        // Button click resumes playback
+        resumeBtn.addEventListener("click", () => {
+            audio.play().then(hideButton);
+        });
+    });
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles for the animation */
         body {
             font-family: 'Inter', sans-serif;
         }
 
         .animation-container {
-            /* This container holds both images */
             position: relative;
             width: 200px;
-            /* Adjusted height for the shorter rectangle */
             height: 250px; 
             margin-top: 50px; 
         }
 
         .circular-image {
-    /* The top, circular image */
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    /* This line is key to centering the element horizontally. */
-    transform: translateX(-50%);
-    z-index: 10;
-    /* The animation will still run, moving it up from this centered position. */
-    animation: move-up 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1s forwards;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            animation: move-up 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) 1s forwards;
         }
 
         .rectangular-gif-wrapper {
-            /* This wrapper clips the growing GIF */
             position: absolute;
-  	    left: 50%;
-  	    top: 100px;
-  	    transform: translateX(-50%);
+            left: 50%;
+            top: 100px;
+            transform: translateX(-50%);
             width: 500px;
             height: 150px;
             z-index: 5;
             overflow: hidden;
-  	    margin: 0 auto;
+            margin: 0 auto;
         }
 
         .rectangular-gif {
@@ -62,14 +89,16 @@
             opacity: 0;
             animation: grow-and-fade-in 0.6s ease-out 1.2s forwards;
         }
-	@keyframes move-up {
-  	   from {
-   	      transform: translateY(0) translateX(-50%);
-   	   }
-    	to {
-     	      transform: translateY(-100px) translateX(-50%);
-  	   }
-	}
+
+        @keyframes move-up {
+            from {
+                transform: translateY(0) translateX(-50%);
+            }
+            to {
+                transform: translateY(-100px) translateX(-50%);
+            }
+        }
+
         @keyframes grow-and-fade-in {
             from {
                 transform: scaleX(0);
@@ -80,35 +109,53 @@
                 opacity: 1;
             }
         }
-.button-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-    opacity: 0;
-    animation: fade-in 0.5s ease-in 2s forwards;
-}
 
-.square-image-button {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px; /* Optional: for rounded corners */
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-}
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fade-in 0.5s ease-in 2s forwards;
+        }
 
-.square-image-button:hover {
-    transform: scale(1.1);
-}
+        .square-image-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
 
-@keyframes fade-in {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
+        .square-image-button:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Resume Audio Button */
+        #resumeAudioBtn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4ade80; /* green */
+            color: black;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        #resumeAudioBtn:hover {
+            background-color: #22c55e;
+        }
     </style>
 </head>
 <body class="bg-black flex flex-col items-center justify-center min-h-screen">
@@ -124,10 +171,17 @@
                  onerror="this.style.backgroundColor='#718096';">
         </div>
     </div>
-	<div class="button-container">
- 	   <a href="https://www.roblox.com/users/58271941"><img src="https://files.catbox.moe/muhqbs.jpg?text=Roblox" alt="roblox" class="square-image-button"></a>
- 	   <a href="https://discord.gg/SBwgMWXATW"><img src="https://files.catbox.moe/39er5q.jpg?text=Discord" alt="discord" class="square-image-button"></a>
-	</div>
 
+    <div class="button-container">
+        <a href="https://www.roblox.com/users/58271941">
+            <img src="https://files.catbox.moe/muhqbs.jpg?text=Roblox" alt="roblox" class="square-image-button">
+        </a>
+        <a href="https://discord.gg/SBwgMWXATW">
+            <img src="https://files.catbox.moe/39er5q.jpg?text=Discord" alt="discord" class="square-image-button">
+        </a>
+    </div>
+
+    <!-- Resume Audio Button -->
+    <button id="resumeAudioBtn">🔊 Resume Audio</button>
 </body>
 </html>
