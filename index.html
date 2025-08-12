@@ -129,20 +129,26 @@
 
     <script>
         const audioPlaylist = [
-            "https://files.catbox.moe/50ek1m.mp3", // Example song 1
+            "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // Example song 1
             "https://files.catbox.moe/9j39ur.mp3" // Your original song
         ];
         let currentSongIndex = 0;
         const audioPlayer = new Audio();
-        let audioStarted = false; // Flag to track if audio has been initiated
+        let audioStarted = false;
 
-        // Add a click event listener to the entire body
-        document.body.addEventListener("click", () => {
-            if (!audioStarted) { // Only play if audio hasn't started yet
+        // Using DOMContentLoaded to ensure the page is fully loaded before attaching the event listener.
+        document.addEventListener("DOMContentLoaded", () => {
+            // Attach the click listener to the entire document body
+            document.body.addEventListener("click", handleUserInteraction, { once: true }); // Using { once: true } to ensure it only runs once
+        });
+
+        // Function to handle user interaction and start audio
+        function handleUserInteraction() {
+            if (!audioStarted) {
                 playCurrentSong();
                 audioStarted = true;
             }
-        });
+        }
 
         audioPlayer.addEventListener("ended", () => {
             currentSongIndex++;
@@ -156,7 +162,12 @@
 
         function playCurrentSong() {
             audioPlayer.src = audioPlaylist[currentSongIndex];
-            audioPlayer.play();
+            audioPlayer.play().catch(error => {
+                // Catch any errors that might occur during play() due to browser restrictions
+                console.error("Audio playback error:", error);
+                // You could add a visual indicator here to inform the user that audio couldn't play
+                // For example: alert("Music could not play automatically. Please check your browser's autoplay settings.");
+            });
         }
     </script>
 </body>
